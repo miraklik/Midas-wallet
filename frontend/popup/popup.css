@@ -1,0 +1,163 @@
+/* Сброс базовых стилей */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Основной фон и шрифты */
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #000; /* Тёмный фон */
+    color: #fff;           /* Белый текст */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Шапка приложения */
+  .app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: linear-gradient(45deg, #ffacac, #ffc94a, #92ffd6);
+    background-size: 200% 200%;
+    animation: gradientAnim 8s ease infinite;
+  }
+  
+  @keyframes gradientAnim {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  .profile-icon .icon-user {
+    font-size: 1.5rem;
+  }
+  
+  .menu-icon .icon-menu {
+    font-size: 1.5rem;
+  }
+  
+  /* Секция с балансом */
+  .balance-section {
+    background: linear-gradient(to top, #232323, transparent);
+    padding: 1.5rem;
+    text-align: center;
+    border-bottom: 1px solid #333;
+  }
+  
+  .total-balance .title {
+    font-size: 0.9rem;
+    color: #aaa;
+  }
+  
+  .total-balance .balance {
+    font-size: 2.5rem;
+    margin: 0.5rem 0;
+  }
+  
+  .total-balance .balance-diff {
+    font-size: 1rem;
+    color: #6cff74; /* Зелёный цвет прироста */
+  }
+  
+  .action-buttons {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .action-buttons button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.8rem 1.2rem;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .action-buttons button:hover {
+    background-color: #555;
+  }
+  
+  /* Секция с криптоактивами */
+  .crypto-actives {
+    padding: 1rem;
+    flex: 1; /* чтобы тянуться вниз при необходимости */
+  }
+  
+  .crypto-actives h2 {
+    margin-bottom: 1rem;
+    font-weight: normal;
+    color: #fff;
+    font-size: 1.2rem;
+    border-bottom: 1px solid #333;
+    padding-bottom: 0.5rem;
+  }
+  
+  .crypto-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  /* Карточка одной монеты */
+  .crypto-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .crypto-card:hover {
+    background-color: #2c2c2c;
+  }
+  
+  /* Левая часть карточки */
+  .crypto-info {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  
+  .crypto-logo img {
+    width: 32px;
+    height: 32px;
+  }
+  
+  /* Правая часть карточки */
+  .crypto-stats {
+    text-align: right;
+  }
+  
+  .crypto-name {
+    font-weight: bold;
+    margin-bottom: 0.2rem;
+  }
+  
+  .crypto-amount {
+    font-size: 0.95rem;
+    color: #bbb;
+  }
+  
+  .crypto-price {
+    font-size: 0.9rem;
+    color: #6cff74; /* допустим, что цена выросла */
+  }
+  
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 400px;
+    height: 600px;
+    box-sizing: border-box;
+  }
+  
+  
