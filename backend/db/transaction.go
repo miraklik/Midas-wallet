@@ -8,16 +8,16 @@ import (
 
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/golang/protobuf/ptypes/timestamp"
 	"gorm.io/gorm"
 )
 
 type Transaction struct {
+	gorm.Model
 	TxHash      string `gorm:"primaryKey"`
 	FromAddress string
 	ToAddress   string
 	Amount      string
-	Timestamp   *timestamp.Timestamp
+	Timestamp   time.Time `gorm:"autoCreateTime"`
 }
 
 func NewTransaction(txHash, fromAddress, toAddress, amount string) *Transaction {
@@ -26,9 +26,7 @@ func NewTransaction(txHash, fromAddress, toAddress, amount string) *Transaction 
 		FromAddress: fromAddress,
 		ToAddress:   toAddress,
 		Amount:      amount,
-		Timestamp: &timestamp.Timestamp{
-			Seconds: time.Now().Unix(),
-		},
+		Timestamp:   time.Now(),
 	}
 }
 

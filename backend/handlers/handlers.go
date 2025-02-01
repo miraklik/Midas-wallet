@@ -10,6 +10,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type Balance struct {
@@ -22,11 +23,19 @@ type TransactionStatusResponse struct {
 	Status string `json:"status"`
 }
 
+type DB_Server struct {
+	db *gorm.DB
+}
+
 var (
 	database, _ = db.ConnectDB()
 
 	cfg, _ = config.Load()
 )
+
+func NewServers(db *gorm.DB) *DB_Server {
+	return &DB_Server{db: db}
+}
 
 func GetBalance(c *gin.Context) {
 	address := c.Query("address")
@@ -91,7 +100,7 @@ func GetTransactionStatusHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-func Withdraw(ethService *services.EthereumService) gin.HandlerFunc {
+func (s *DB_Server) Withdraw(ethService *services.EthereumService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req struct {
 			To     string `json:"to"`
@@ -128,7 +137,7 @@ func Withdraw(ethService *services.EthereumService) gin.HandlerFunc {
 	}
 }
 
-func Transfer(ethService *services.EthereumService) gin.HandlerFunc {
+func (s *DB_Server) Transfer(ethService *services.EthereumService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req struct {
 			To     string `json:"to"`

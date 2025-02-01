@@ -36,6 +36,11 @@ func ConnectDB() (*gorm.DB, error) {
 		return db, fmt.Errorf("database migration failed: %w", err)
 	}
 
+	if err := db.AutoMigrate(&User{}); err != nil {
+		log.Printf("Failed to migrate database: %v", err)
+		return db, fmt.Errorf("database migration failed: %w", err)
+	}
+
 	SynchronizeTransactions(db)
 
 	return db, nil
