@@ -383,6 +383,11 @@
 			{
 				"inputs": [
 					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					},
+					{
 						"internalType": "uint256",
 						"name": "_amount",
 						"type": "uint256"
@@ -392,6 +397,10 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "receive"
 			}
 		],
 		"devdoc": {
@@ -429,7 +438,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/wallet.sol": "Wallet"
+			"wallet.sol": "Wallet"
 		},
 		"evmVersion": "shanghai",
 		"libraries": {},
@@ -467,12 +476,12 @@
 				"dweb:/ipfs/Qmax9WHBnVsZP46ZxEMNRQpLQnrdE4dK8LehML1Py8FowF"
 			]
 		},
-		"contracts/wallet.sol": {
-			"keccak256": "0x7dd3b0a83355ebc8b577461ee4739a2f8b323c6f6a4307e38d731a2729a71c25",
+		"wallet.sol": {
+			"keccak256": "0x831157dd0e9360b3f323b8261d5e086e18e45c0dca4c1d118e489850bf3e74d8",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://1c8f6d5ff4dc1c59bb15cadf157bfcebe1e651d1d5d9c06238df2c01c41408c9",
-				"dweb:/ipfs/QmPjrPKze9cFqFQsnHaqXbpbwq9dEPahMxtPoBatXGQAcB"
+				"bzz-raw://337a6eee731e8ff5bf6c465292e65b1c573aff7b19de2c03ea4119d48f2e1cbf",
+				"dweb:/ipfs/QmdLCTkfwmCkk3uRdxz8jkXscr6QwTrLafR5jR55JYtwj6"
 			]
 		}
 	},

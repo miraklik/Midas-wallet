@@ -4,9 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-
-
-contract Wallet is Ownable{
+contract Wallet is Ownable {
     mapping(address => uint256) public balances;
     mapping(address => mapping(address => uint256)) public allowed;
 
@@ -18,16 +16,15 @@ contract Wallet is Ownable{
     event Transfer(address indexed from, address indexed to, uint256 amount);
     event Approval(address indexed owner, address indexed spender, uint256 value);
 
-    constructor(address _token, uint256 _feePercentage) Ownable(msg.sender){
+    constructor(address _token, uint256 _feePercentage) Ownable(msg.sender) {
         require(_token != address(0), "Invalid token address");
-        feePercentage = _feePercentage;
         token = IERC20(_token);
+        feePercentage = _feePercentage;
     }
 
     function deposit(uint256 _amount) public {
         require(_amount > 0, "Invalid amount");
         require(token.transferFrom(msg.sender, address(this), _amount), "Transfer failed");
-
         balances[msg.sender] += _amount;
         emit Deposit(msg.sender, _amount);
     }
@@ -41,10 +38,8 @@ contract Wallet is Ownable{
         uint256 amountAfterFee = _amount - fee;
 
         balances[msg.sender] -= _amount;
-        balances[_to] += _amount;
 
-        require(token.balanceOf(address(this)) >= amountAfterFee, "Insufficient contract balance");
-        require(token.transfer(msg.sender, amountAfterFee), "Transfer failed");
+        require(token.transfer(_to, amountAfterFee), "Transfer failed");
 
         if (fee > 0) {
             require(token.transfer(owner(), fee), "Fee transfer failed");
@@ -96,5 +91,9 @@ contract Wallet is Ownable{
 
     function setFeePercentage(uint256 _newFeePercentage) public onlyOwner {
         feePercentage = _newFeePercentage;
+    }
+
+    receive() external payable {
+        emit Deposit(msg.sender, msg.value);
     }
 }
