@@ -5,6 +5,17 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Wallet is Ownable {
+
+    error InvalidAmount(uint256 amount);
+    error InvalidTokenAddress();
+    error InsufficientBalance(uint256 balance, uint256 amount);
+    error InvalidRecipientAddress();
+    error TransferFailed();
+    error FeeTransferFailed();
+    error ApprovalFailed();
+    error InvalidSpenderAddress(address spender);
+    error NotAllowed(address owner, address spender);
+
     mapping(address => uint256) public balances;
     mapping(address => mapping(address => uint256)) public allowed;
 
@@ -17,32 +28,46 @@ contract Wallet is Ownable {
     event Approval(address indexed owner, address indexed spender, uint256 value);
 
     constructor(address _token, uint256 _feePercentage) Ownable(msg.sender) {
-        require(_token != address(0), "Invalid token address");
+        if (_token == address(0)) {
+            revert InvalidTokenAddress();
+        }
         token = IERC20(_token);
         feePercentage = _feePercentage;
     }
 
     function deposit(uint256 _amount) public {
-        require(_amount > 0, "Invalid amount");
-        require(token.transferFrom(msg.sender, address(this), _amount), "Transfer failed");
+        if (_amount <= 0) {
+            revert InvalidAmount(_amount);
+        }
+        if (!token.transferFrom(msg.sender, address(this), _amount)) {
+            revert TransferFailed();
+        }
         balances[msg.sender] += _amount;
         emit Deposit(msg.sender, _amount);
     }
 
     function withdraw(address _to, uint256 _amount) public {
-        require(_amount > 0, "Invalid amount");
-        require(_amount <= balances[msg.sender], "Insufficient balance");
-        require(_to != address(0), "Invalid recipient address");
+        if (_amount <= 0) {
+            revert InvalidAmount(_amount);
+        }
+        if (balances[msg.sender] < _amount) {
+            revert InsufficientBalance(balances[msg.sender], _amount);
+        }
+        if (_to == address(0)) {
+            revert InvalidRecipientAddress();
+        }
 
         uint256 fee = (_amount * feePercentage) / 100;
         uint256 amountAfterFee = _amount - fee;
 
         balances[msg.sender] -= _amount;
 
-        require(token.transfer(_to, amountAfterFee), "Transfer failed");
+        if (!token.transfer(_to, amountAfterFee)) {
+            revert TransferFailed();
+        }
 
-        if (fee > 0) {
-            require(token.transfer(owner(), fee), "Fee transfer failed");
+        if (fee > 0 && !token.transfer(owner(), fee)) {
+            revert FeeTransferFailed();
         }
 
         emit Withdraw(_to, _amount, fee);
@@ -53,9 +78,15 @@ contract Wallet is Ownable {
     }
 
     function transfer(address _to, uint256 _amount) public {
-        require(_amount > 0, "Invalid amount");
-        require(_amount <= balances[msg.sender], "Insufficient balance");
-        require(_to != address(0), "Invalid recipient address");
+        if (_amount <= 0) {
+            revert InvalidAmount(_amount);
+        }
+        if (_amount > balances[msg.sender]) {
+            revert InsufficientBalance(balances[msg.sender], _amount);
+        }
+        if (_to == address(0)) {
+            revert InvalidRecipientAddress();
+        }
 
         balances[msg.sender] -= _amount;
         balances[_to] += _amount;
@@ -64,10 +95,14 @@ contract Wallet is Ownable {
     }
 
     function approve(address _spender, uint256 _amount) public {
-        require(_spender != address(0), "Invalid spender address");
+        if (_spender == address(0)) {
+            revert InvalidSpenderAddress(_spender);
+        }
 
         allowed[msg.sender][_spender] = _amount;
-        require(token.approve(_spender, _amount), "Approval failed");
+        if (!token.approve(_spender, _amount)) {
+            revert ApprovalFailed();
+        }
 
         emit Approval(msg.sender, _spender, _amount);
     }
@@ -77,10 +112,18 @@ contract Wallet is Ownable {
     }
 
     function transferFrom(address _from, address _to, uint256 _amount) public {
-        require(_amount > 0, "Invalid amount");
-        require(_to != address(0), "Invalid recipient address");
-        require(_amount <= allowed[_from][msg.sender], "Not allowed to spend this amount");
-        require(_amount <= balances[_from], "Insufficient balance");
+        if (_amount <= 0) {
+            revert InvalidAmount(_amount);
+        }
+        if (_to == address(0)) {
+            revert InvalidRecipientAddress();
+        }
+        if (_amount > allowed[_from][msg.sender]) {
+            revert NotAllowed(_from, msg.sender);
+        }
+        if (_amount > balances[_from]) {
+            revert InsufficientBalance(balances[_from], _amount);
+        }
 
         balances[_from] -= _amount;
         balances[_to] += _amount;
