@@ -22,6 +22,80 @@
 				"type": "constructor"
 			},
 			{
+				"inputs": [],
+				"name": "ApprovalFailed",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "FeeTransferFailed",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "balance",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "InsufficientBalance",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "InvalidAmount",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "InvalidRecipientAddress",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "spender",
+						"type": "address"
+					}
+				],
+				"name": "InvalidSpenderAddress",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "InvalidTokenAddress",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "spender",
+						"type": "address"
+					}
+				],
+				"name": "NotAllowed",
+				"type": "error"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -41,6 +115,11 @@
 					}
 				],
 				"name": "OwnableUnauthorizedAccount",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "TransferFailed",
 				"type": "error"
 			},
 			{
@@ -477,11 +556,11 @@
 			]
 		},
 		"wallet.sol": {
-			"keccak256": "0x831157dd0e9360b3f323b8261d5e086e18e45c0dca4c1d118e489850bf3e74d8",
+			"keccak256": "0xcc67f6c76f1f913d2681d042121f4ba428075585b606433f7107571098f7d991",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://337a6eee731e8ff5bf6c465292e65b1c573aff7b19de2c03ea4119d48f2e1cbf",
-				"dweb:/ipfs/QmdLCTkfwmCkk3uRdxz8jkXscr6QwTrLafR5jR55JYtwj6"
+				"bzz-raw://694a425c36ebcf6f323b238a0ce53b251a7997d7e5bf1b5e5d5b81d010ac3197",
+				"dweb:/ipfs/QmVXsb7DbcUGcFjx2ckYi3NAEqQNPy2Xfd5W6cTWitxFpF"
 			]
 		}
 	},
