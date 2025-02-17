@@ -6,6 +6,7 @@ import (
 	"crypto/ecdsa"
 	"fmt"
 	"log"
+	"math/big"
 	"os"
 	"strings"
 
@@ -55,26 +56,45 @@ func NewEthreumService(rpcURL, contractAddress, privateKeyHex, abiJSON string) (
 	}, nil
 }
 
-func (es *EthereumService) createAuth() (*bind.TransactOpts, error) {
+func (es *EthereumService) loadContractr(PathABI string) (*bind.BoundContract, error) {
+	contractABI, err := os.ReadFile(PathABI)
+	if err != nil {
+		log.Fatalf("Failed to read ABI file: %v", err)
+	}
+
+	parseABI, err := abi.JSON(strings.NewReader(string(contractABI)))
+	if err != nil {
+		log.Fatalf("Failed to parse ABI: %v", err)
+	}
+
+	contract := bind.NewBoundContract(es.ContractAddress, parseABI, es.Client, es.Client, es.Client)
+	return contract, nil
+}
+
+func (es *EthereumService) createAuth(gasLimit uint64, gasPrice *big.Int) (*bind.TransactOpts, error) {
 	chainID, err := es.Client.ChainID(context.Background())
 	if err != nil {
-		log.Printf("Failed to get Chain id: %v", err)
-		return nil, fmt.Errorf("failed to get Chain id: %v", err)
+		return nil, fmt.Errorf("failed to get Chain ID: %v", err)
 	}
 
 	auth, err := bind.NewKeyedTransactorWithChainID(es.PrivateKey, chainID)
 	if err != nil {
-		log.Printf("Failed to create auth: %v", err)
 		return nil, fmt.Errorf("failed to create auth: %v", err)
 	}
 
-	auth.GasLimit = uint64(21000)
-	gasPrice, err := es.Client.SuggestGasPrice(context.Background())
-	if err != nil {
-		log.Printf("Failed to suggest gas price: %v", err)
-		return nil, fmt.Errorf("failed to suggest gas price: %v", err)
+	if gasLimit > 0 {
+		auth.GasLimit = gasLimit
 	}
-	auth.GasPrice = gasPrice
+
+	if gasPrice != nil {
+		auth.GasPrice = gasPrice
+	} else {
+		suggestedGasPrice, err := es.Client.SuggestGasPrice(context.Background())
+		if err != nil {
+			return nil, fmt.Errorf("failed to suggest gas price: %v", err)
+		}
+		auth.GasPrice = suggestedGasPrice
+	}
 
 	return auth, nil
 }
@@ -85,23 +105,16 @@ func (es *EthereumService) Withdraw(to, amount string) error {
 		return fmt.Errorf("failed to check address: %v", err)
 	}
 
-	auth, err := es.createAuth()
+	auth, err := es.createAuth(21000, nil)
 	if err != nil {
 		return err
 	}
 
-	contractABI, err := os.ReadFile("./build/walletABI.json")
+	contract, err := es.loadContractr("./build/walletABI.json")
 	if err != nil {
 		log.Printf("Failed to read ABI file: %v", err)
-		return fmt.Errorf("failed to read ABI file: %v", err)
-	}
-	parseABI, err := abi.JSON(strings.NewReader(string(contractABI)))
-	if err != nil {
-		log.Printf("Failed to parse ABI: %v", err)
-		return fmt.Errorf("failed to parse ABI: %v", err)
 	}
 
-	contract := bind.NewBoundContract(es.ContractAddress, parseABI, es.Client, es.Client, es.Client)
 	tx, err := contract.Transact(auth, "withdraw", to, amount)
 	if err != nil {
 		log.Printf("Failed to withdraw: %v", err)
@@ -113,23 +126,16 @@ func (es *EthereumService) Withdraw(to, amount string) error {
 }
 
 func (es *EthereumService) Deposit(amount string) error {
-	auth, err := es.createAuth()
+	auth, err := es.createAuth(21000, nil)
 	if err != nil {
 		return err
 	}
 
-	contractABI, err := os.ReadFile("./build/walletABI.json")
+	contract, err := es.loadContractr("./build/walletABI.json")
 	if err != nil {
 		log.Printf("Failed to read ABI file: %v", err)
-		return fmt.Errorf("failed to read ABI file: %v", err)
-	}
-	parseABI, err := abi.JSON(strings.NewReader(string(contractABI)))
-	if err != nil {
-		log.Printf("Failed to parse ABI: %v", err)
-		return fmt.Errorf("failed to parse ABI: %v", err)
 	}
 
-	contract := bind.NewBoundContract(es.ContractAddress, parseABI, es.Client, es.Client, es.Client)
 	tx, err := contract.Transact(auth, "deposit", amount)
 	if err != nil {
 		log.Printf("Failed to deposit: %v", err)
@@ -146,23 +152,16 @@ func (es *EthereumService) Transfer(to, amount string) error {
 		return fmt.Errorf("failed to check address: %v", err)
 	}
 
-	auth, err := es.createAuth()
+	auth, err := es.createAuth(21000, nil)
 	if err != nil {
 		return err
 	}
 
-	contractABI, err := os.ReadFile("./build/walletABI.json")
+	contract, err := es.loadContractr("./build/walletABI.json")
 	if err != nil {
 		log.Printf("Failed to read ABI file: %v", err)
-		return fmt.Errorf("failed to read ABI file: %v", err)
-	}
-	parseABI, err := abi.JSON(strings.NewReader(string(contractABI)))
-	if err != nil {
-		log.Printf("Failed to parse ABI: %v", err)
-		return fmt.Errorf("failed to parse ABI: %v", err)
 	}
 
-	contract := bind.NewBoundContract(es.ContractAddress, parseABI, es.Client, es.Client, es.Client)
 	tx, err := contract.Transact(auth, "transfer", to, amount)
 	if err != nil {
 		log.Printf("Failed to transfer: %v", err)
