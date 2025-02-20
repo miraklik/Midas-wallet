@@ -1,0 +1,167 @@
+{
+  "version": "3.4",
+  "log": [
+    {
+      "@openzeppelin/contracts/access/Ownable.sol:Ownable": {
+        "src": "@openzeppelin\\contracts\\access\\Ownable.sol:20",
+        "inherit": [
+          "@openzeppelin/contracts/utils/Context.sol:Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "owner()",
+          "renounceOwnership()",
+          "transferOwnership(address)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Ownable",
+            "src": "@openzeppelin\\contracts\\access\\Ownable.sol:38"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "Ownable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin\\contracts\\access\\Ownable.sol:21"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": false,
+          "namespaces": {}
+        },
+        "solcVersion": "0.8.24"
+      },
+      "@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20": {
+        "src": "@openzeppelin\\contracts\\token\\ERC20\\IERC20.sol:9",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "totalSupply()",
+          "balanceOf(address)",
+          "transfer(address,uint256)",
+          "allowance(address,address)",
+          "approve(address,uint256)",
+          "transferFrom(address,address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.2",
+          "flat": false,
+          "namespaces": {}
+        },
+        "solcVersion": "0.8.24"
+      },
+      "@openzeppelin/contracts/utils/Context.sol:Context": {
+        "src": "@openzeppelin\\contracts\\utils\\Context.sol:16",
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.2",
+          "flat": false,
+          "namespaces": {}
+        },
+        "solcVersion": "0.8.24"
+      },
+      "contracts/wallet.sol:Wallet": {
+        "src": "contracts\\wallet.sol:7",
+        "version": {
+          "withMetadata": "d7d072a411ae49ac6c7519bd41727b2a6645eaff5fd616edd0ad46264d917269",
+          "withoutMetadata": "d7d072a411ae49ac6c7519bd41727b2a6645eaff5fd616edd0ad46264d917269",
+          "linkedWithoutMetadata": "d7d072a411ae49ac6c7519bd41727b2a6645eaff5fd616edd0ad46264d917269"
+        },
+        "inherit": [
+          "@openzeppelin/contracts/access/Ownable.sol:Ownable",
+          "@openzeppelin/contracts/utils/Context.sol:Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "(address,uint256)",
+          "deposit(uint256)",
+          "withdraw(address,uint256)",
+          "getBalance()",
+          "transfer(address,uint256)",
+          "approve(address,uint256)",
+          "allowance(address,address)",
+          "transferFrom(address,address,uint256)",
+          "setFeePercentage(uint256)",
+          "()"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Wallet",
+            "src": "contracts\\wallet.sol:30"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "contract": "Wallet",
+              "label": "balances",
+              "type": "t_mapping(t_address,t_uint256)",
+              "src": "contracts\\wallet.sol:19"
+            },
+            {
+              "contract": "Wallet",
+              "label": "allowed",
+              "type": "t_mapping(t_address,t_mapping(t_address,t_uint256))",
+              "src": "contracts\\wallet.sol:20"
+            },
+            {
+              "contract": "Wallet",
+              "label": "feePercentage",
+              "type": "t_uint256",
+              "src": "contracts\\wallet.sol:22"
+            },
+            {
+              "contract": "Wallet",
+              "label": "token",
+              "type": "t_contract(IERC20)225",
+              "src": "contracts\\wallet.sol:23"
+            }
+          ],
+          "types": {
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)"
+            },
+            "t_address": {
+              "label": "address"
+            },
+            "t_uint256": {
+              "label": "uint256"
+            },
+            "t_mapping(t_address,t_mapping(t_address,t_uint256))": {
+              "label": "mapping(address => mapping(address => uint256))"
+            },
+            "t_contract(IERC20)225": {
+              "label": "contract IERC20"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": false,
+          "namespaces": {}
+        },
+        "solcVersion": "0.8.24"
+      }
+    }
+  ]
+}
